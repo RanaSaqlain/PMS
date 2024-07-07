@@ -6,18 +6,27 @@ use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Resources\ProjectResource;
 use App\Models\Project;
+use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $projects = Project::paginate(10)->onEachSide(1);
+        $projects = Project::query();
+        if ($request->has('name')) {
+            $projects->where('name', 'like', '%' . request('name') . '%');
+        }
+        if ($request->has('status')) {
+            $projects->where('status', request('status'));
+        }
+        $projects = $projects->paginate(10)->onEachSide(1);
         $projectResource = ProjectResource::collection($projects);
-        return inertia('Project/Index',[
-            'projects' => $projectResource
+        return inertia('Project/Index', [
+            'projects' => $projectResource,
+            'queryParams' => $request->query() ?: null,
         ]);
     }
 
