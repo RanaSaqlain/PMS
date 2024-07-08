@@ -1,10 +1,10 @@
 import React from "react";
 import Image from "./Image";
-import { Link } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 import Pagination from "./Pagination";
 import { STATUS_CLASS, STATUS_TEXT } from "@/constants";
 
-const Table = ({ columns, data }) => {
+const Table = ({ columns, data, sortColoumns, queryParams }) => {
     function cellData(row, column_name, routename) {
         const cellData = row[column_name];
         if (column_name.includes("image")) {
@@ -16,7 +16,12 @@ const Table = ({ columns, data }) => {
         }
         if (column_name == "status") {
             return (
-                <span className={" px-2 py-2 rounded text-white " + STATUS_CLASS[cellData]}>
+                <span
+                    className={
+                        " px-2 py-2 rounded text-white " +
+                        STATUS_CLASS[cellData]
+                    }
+                >
                     {STATUS_TEXT[cellData]}
                 </span>
             );
@@ -41,6 +46,22 @@ const Table = ({ columns, data }) => {
         }
         return row[column_name];
     }
+    queryParams = queryParams ? queryParams : {};
+    function sortChanged(column_name) {
+        if (sortColoumns.includes(column_name)) {
+            if (column_name === queryParams.sort_field) {
+                if (queryParams.sort_direction == "asc") {
+                    queryParams.sort_direction = "desc";
+                } else {
+                    queryParams.sort_direction = "asc";
+                }
+            } else {
+                queryParams.sort_field = column_name;
+                queryParams.sort_direction = "asc";
+            }
+        }
+        router.get(route("project.index", queryParams));
+    }
     return (
         <div className="container mx-auto p-4">
             <div className="overflow-x-auto">
@@ -50,9 +71,10 @@ const Table = ({ columns, data }) => {
                             {columns.map((item, index) => (
                                 <th
                                     key={index}
-                                    className={`py-2 px-4 text-left text-sm font-medium text-gray-600 ${
+                                    className={`py-2 px-4 text-left text-sm font-medium text-gray-600 cursor-pointer ${
                                         item.class || ""
                                     }`}
+                                    onClick={(e) => sortChanged(item.db)}
                                 >
                                     {item.dsp}
                                 </th>

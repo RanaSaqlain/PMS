@@ -3,9 +3,8 @@ import TextInput from "./TextInput";
 import Select from "./SelectInput";
 import { router } from "@inertiajs/core";
 
-const Filter = (queryParams = null) => {
-    queryParams = queryParams ? { ...queryParams } : {};
-
+const Filter = ({ queryParams = null }) => {
+    queryParams = queryParams ? queryParams : {};
     const searchField = (name, value) => {
         if (value) {
             queryParams[name] = value;

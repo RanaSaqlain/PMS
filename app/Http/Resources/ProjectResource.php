@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -22,8 +23,8 @@ class ProjectResource extends JsonResource
             'status' => $this->status ?? null,
             'created_by' => new UserResource($this->createdBy) ?? null,
             'updated_by' => new UserResource($this->updatedBy) ?? null,
-            'due_date' => $this->due_date ?? null,
-            'created_at' => $this->created_at ?? null,
+            'due_date' => Carbon::parse($this->due_date)->format("Y-m-d") ?? null,
+            'created_at' => Carbon::parse($this->created_at)->format("Y-m-d") ?? null,
             'updated_at' => $this->updated_at ?? null,
         ];
     }
