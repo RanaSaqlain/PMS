@@ -26,7 +26,7 @@ class ProjectController extends Controller
         if ($request->has('status')) {
             $projects->where('status', request('status'));
         }
-        $projects = $projects->orderBy($sortField,$sortDirection)->paginate(10)->onEachSide(1);
+        $projects = $projects->orderBy($sortField, $sortDirection)->paginate(10)->onEachSide(1);
         $projectResource = ProjectResource::collection($projects);
         return inertia('Project/Index', [
             'projects' => $projectResource,
@@ -55,7 +55,9 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        //
+        return inertia("Project/Show", [
+            "project" => new ProjectResource($project)
+        ]);
     }
 
     /**

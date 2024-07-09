@@ -3,6 +3,7 @@ import Image from "./Image";
 import { Link, router } from "@inertiajs/react";
 import Pagination from "./Pagination";
 import { STATUS_CLASS, STATUS_TEXT } from "@/constants";
+import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/16/solid";
 
 const Table = ({ columns, data, sortColoumns, queryParams }) => {
     function cellData(row, column_name, routename) {
@@ -44,6 +45,19 @@ const Table = ({ columns, data, sortColoumns, queryParams }) => {
                 </>
             );
         }
+
+        if (column_name == "name") {
+            return (
+                <>
+                    <Link
+                        className={"hover:underline hover:text-blue-400"}
+                        href={route(routename + ".show", row["id"])}
+                    >
+                        {row[column_name]}
+                    </Link>
+                </>
+            );
+        }
         return row[column_name];
     }
     queryParams = queryParams ? queryParams : {};
@@ -60,7 +74,7 @@ const Table = ({ columns, data, sortColoumns, queryParams }) => {
                 queryParams.sort_direction = "asc";
             }
         }
-        router.get(route("project.index", queryParams));
+        router.get(route(data.routename + ".index", queryParams));
     }
     return (
         <div className="container mx-auto p-4">
@@ -76,7 +90,37 @@ const Table = ({ columns, data, sortColoumns, queryParams }) => {
                                     }`}
                                     onClick={(e) => sortChanged(item.db)}
                                 >
-                                    {item.dsp}
+                                    <div className="flex items-center justify-between gap-1 text-nowrap">
+                                        {item.dsp}
+                                        {sortColoumns.includes(item.db) ? (
+                                            <div>
+                                                <ChevronUpIcon
+                                                    className={
+                                                        "w-4 " +
+                                                        (queryParams.sort_field ===
+                                                            item.db &&
+                                                        queryParams.sort_direction ==
+                                                            "asc"
+                                                            ? "text-amber-300"
+                                                            : "")
+                                                    }
+                                                ></ChevronUpIcon>
+                                                <ChevronDownIcon
+                                                    className={
+                                                        "w-4 -mt-2 " +
+                                                        (queryParams.sort_field ===
+                                                            item.db &&
+                                                        queryParams.sort_direction ==
+                                                            "desc"
+                                                            ? "text-amber-300"
+                                                            : "")
+                                                    }
+                                                ></ChevronDownIcon>
+                                            </div>
+                                        ) : (
+                                            ""
+                                        )}
+                                    </div>
                                 </th>
                             ))}
                         </tr>

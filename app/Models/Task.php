@@ -21,4 +21,22 @@ class Task extends Model
         'updated_by',
         'due_date',
     ];
+
+    function project()
+    {
+        return $this->belongsTo(Project::class, 'project_id');
+    }
+
+    function assignedUser()
+    {
+        return $this->belongsTo(User::class, 'assigned_user_id');
+    }
+    function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+    function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
 }

@@ -3,13 +3,14 @@ import TextInput from "./TextInput";
 import Select from "./SelectInput";
 import { router } from "@inertiajs/core";
 
-const Filter = ({ queryParams = null }) => {
+const Filter = ({ routeName,queryParams = null}) => {
     queryParams = queryParams ? queryParams : {};
     const searchField = (name, value) => {
         if (value) {
             queryParams[name] = value;
         }
-        router.get(route("project.index", queryParams));
+        
+        router.get(route(routeName+".index", queryParams));
     };
     const onKeyPress = (name, e) => {
         if (e.key === "Enter") {
