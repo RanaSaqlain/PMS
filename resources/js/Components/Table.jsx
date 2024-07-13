@@ -5,7 +5,8 @@ import Pagination from "./Pagination";
 import { STATUS_CLASS, STATUS_TEXT } from "@/constants";
 import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/16/solid";
 
-const Table = ({ columns, data, sortColoumns, queryParams }) => {
+const Table = ({ columns, data, sortColoumns, queryParams, showSortBy = true }) => {
+    console.log(data);
     function cellData(row, column_name, routename) {
         const cellData = row[column_name];
         if (column_name.includes("image")) {
@@ -88,11 +89,11 @@ const Table = ({ columns, data, sortColoumns, queryParams }) => {
                                     className={`py-2 px-4 text-left text-sm font-medium text-gray-600 cursor-pointer ${
                                         item.class || ""
                                     }`}
-                                    onClick={(e) => sortChanged(item.db)}
+                                    onClick={(e) => {showSortBy?sortChanged(item.db):''}}
                                 >
                                     <div className="flex items-center justify-between gap-1 text-nowrap">
                                         {item.dsp}
-                                        {sortColoumns.includes(item.db) ? (
+                                        {(sortColoumns.includes(item.db) && showSortBy)? (
                                             <div>
                                                 <ChevronUpIcon
                                                     className={

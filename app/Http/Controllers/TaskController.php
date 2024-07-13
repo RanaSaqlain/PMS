@@ -14,7 +14,8 @@ class TaskController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
+    {   
+        $request->merge(['show_project'=>true]);
         $tasks = Task::query();
         $sortField = request("sort_field", "created_at");
         $sortDirection = request("sort_direction", "desc");
