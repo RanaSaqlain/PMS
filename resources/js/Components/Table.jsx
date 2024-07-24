@@ -4,9 +4,17 @@ import { Link, router } from "@inertiajs/react";
 import Pagination from "./Pagination";
 import { STATUS_CLASS, STATUS_TEXT } from "@/constants";
 import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/16/solid";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
-const Table = ({ columns, data, sortColoumns, queryParams, showSortBy = true }) => {
-    console.log(data);
+const Table = ({
+    columns,
+    data,
+    sortColoumns,
+    queryParams,
+    showSortBy = true,
+}) => {
+    const MySwal = withReactContent(Swal);
     function cellData(row, column_name, routename) {
         const cellData = row[column_name];
         if (column_name.includes("image")) {
@@ -39,6 +47,12 @@ const Table = ({ columns, data, sortColoumns, queryParams, showSortBy = true }) 
                     </Link>
                     <Link
                         href={route(routename + ".destroy", row.id)}
+                        onClick={(e) =>
+                            handleDelete(
+                                e,
+                                route(routename + ".destroy", row.id)
+                            )
+                        }
                         className="font-medium text-red-700 rounded-2xl hover:underline mx-1"
                     >
                         Delete
@@ -77,6 +91,22 @@ const Table = ({ columns, data, sortColoumns, queryParams, showSortBy = true }) 
         }
         router.get(route(data.routename + ".index", queryParams));
     }
+    const handleDelete = (e, url) => {
+        e.preventDefault();
+        MySwal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var deleted = router.delete(url);
+            }
+        });
+    };
     return (
         <div className="container mx-auto p-4">
             <div className="overflow-x-auto">
@@ -89,11 +119,14 @@ const Table = ({ columns, data, sortColoumns, queryParams, showSortBy = true }) 
                                     className={`py-2 px-4 text-left text-sm font-medium text-gray-600 cursor-pointer ${
                                         item.class || ""
                                     }`}
-                                    onClick={(e) => {showSortBy?sortChanged(item.db):''}}
+                                    onClick={(e) => {
+                                        showSortBy ? sortChanged(item.db) : "";
+                                    }}
                                 >
                                     <div className="flex items-center justify-between gap-1 text-nowrap">
                                         {item.dsp}
-                                        {(sortColoumns.includes(item.db) && showSortBy)? (
+                                        {sortColoumns.includes(item.db) &&
+                                        showSortBy ? (
                                             <div>
                                                 <ChevronUpIcon
                                                     className={
@@ -127,27 +160,39 @@ const Table = ({ columns, data, sortColoumns, queryParams, showSortBy = true }) 
                         </tr>
                     </thead>
                     <tbody>
-                        {data.project.data.map((row, rowIndex) => (
-                            <tr
-                                key={rowIndex}
-                                className={`border-b ${data.class || ""}`}
-                            >
-                                {columns.map((column, colIndex) => (
-                                    <td
-                                        key={colIndex}
-                                        className={`py-2 px-4 text-sm text-gray-700 ${
-                                            column.class || ""
-                                        }`}
-                                    >
-                                        {cellData(
-                                            row,
-                                            column.db,
-                                            data.routename
-                                        )}
-                                    </td>
-                                ))}
+                        {data.project.data.length > 0 ? (
+                            data.project.data.map((row, rowIndex) => (
+                                <tr
+                                    key={rowIndex}
+                                    className={`border-b ${data.class || ""}`}
+                                >
+                                    {columns.map((column, colIndex) => (
+                                        <td
+                                            key={colIndex}
+                                            className={`py-2 px-4 text-sm text-gray-700 ${
+                                                column.class || ""
+                                            }`}
+                                        >
+                                            {cellData(
+                                                row,
+                                                column.db,
+                                                data.routename
+                                            )}
+                                        </td>
+                                    ))}
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                {" "}
+                                <td
+                                    colSpan={columns.length}
+                                    className="text-center"
+                                >
+                                    No Data Found
+                                </td>
                             </tr>
-                        ))}
+                        )}
                     </tbody>
                 </table>
             </div>

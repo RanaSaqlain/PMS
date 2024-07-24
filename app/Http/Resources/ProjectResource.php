@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectResource extends JsonResource
 {
@@ -19,7 +20,7 @@ class ProjectResource extends JsonResource
             'id' => $this->id ?? null,
             'name' => $this->name ?? null,
             'description' => $this->description ?? null,
-            'image_path' => $this->image_path ?? null,
+            'image_path' => $this->image_path && !filter_var($this->image_path, FILTER_VALIDATE_URL) ? Storage::url($this->image_path) : $this->image_path ?? null,
             'status' => $this->status ?? null,
             'created_by' => new UserResource($this->createdBy) ?? null,
             'updated_by' => new UserResource($this->updatedBy) ?? null,

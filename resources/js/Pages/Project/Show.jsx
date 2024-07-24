@@ -24,7 +24,7 @@ const Show = ({ auth, project,tasks,queryParams }) => {
                             <img
                                 src={project.image_path}
                                 alt={project.name}
-                                className={"w-full h-64 object-cover"}
+                                className={"w-full h-64 object-contain"}
                             />
                         </div>
                         <div className="p-6 text-gray-900">
