@@ -3,7 +3,7 @@ import TextInput from "./TextInput";
 import Select from "./SelectInput";
 import { router } from "@inertiajs/core";
 
-const Filter = ({ routeName,queryParams = null}) => {
+const Filter = ({ routeName,queryParams = null,show=true}) => {
     queryParams = queryParams ? queryParams : {};
     const searchField = (name, value) => {
         if (value) {
@@ -36,7 +36,7 @@ const Filter = ({ routeName,queryParams = null}) => {
                             onKeyPress={(e) => onKeyPress("name", e)}
                         ></TextInput>
                     </div>
-                    <div className="px-2">
+                    <div className={"px-2  "+ show} >
                         <label htmlFor="" className="px-2">
                             Status
                         </label>
