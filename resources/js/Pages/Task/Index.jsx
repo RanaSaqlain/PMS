@@ -1,16 +1,24 @@
 import Filter from "@/Components/Filter";
 import Table from "@/Components/Table";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 
 export default function Index(data) {
     return (
         <AuthenticatedLayout
             user={data.auth.user}
             header={
-                <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    Tasks
-                </h2>
+                <div className="flex justify-between items-center">
+                    <h2 className="font-semibold text-xl text-gray-800 leading-tight">
+                        Tasks
+                    </h2>
+                    <Link
+                        href={route("task.create")}
+                        className="bg-green-400 p-2 rounded shadow transition-all hover:bg-green-800 hover:text-white"
+                    >
+                        Add New
+                    </Link>
+                </div>
             }
         >
             <Head title="Tasks" />
@@ -19,7 +27,10 @@ export default function Index(data) {
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
-                            <Filter queryParams={data.queryParams} routeName="task"></Filter>
+                            <Filter
+                                queryParams={data.queryParams}
+                                routeName="task"
+                            ></Filter>
                             <Table
                                 queryParams={data.queryParams}
                                 sortColoumns={[
@@ -36,7 +47,11 @@ export default function Index(data) {
                                         class: "py-3",
                                     },
                                     { db: "name", dsp: "Name", class: "py-3" },
-                                    { db: "project_id", dsp: "Project", class: "py-3" },
+                                    {
+                                        db: "project_id",
+                                        dsp: "Project",
+                                        class: "py-3",
+                                    },
                                     {
                                         db: "status",
                                         dsp: "Status",
@@ -52,7 +67,7 @@ export default function Index(data) {
                                         dsp: "Assigned User",
                                         class: "py-3",
                                     },
-                                    
+
                                     {
                                         db: "due_date",
                                         dsp: "Due Date",
