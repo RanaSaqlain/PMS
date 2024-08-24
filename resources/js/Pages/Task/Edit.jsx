@@ -8,19 +8,22 @@ import { Button, Textarea } from "@headlessui/react";
 import TextAreaInput from "@/Components/TextAreaInput";
 import SelectInput from "@/Components/SelectInput";
 
-const Edit = ({ auth, task }) => {
+const Edit = ({ auth, task, users, projects  }) => {
     const { data, setData, put, errors, reset } = useForm({
         image: "",
         name: task.data.name || "",
         status: task.data.status || "",
         description: task.data.description || "",
         due_date: task.data.due_date || "",
+        priority:task.data.priority ||"" ,
+        assigned_user_id: task.data.assigned_user_id.id || "",
+        project_id: task.data.project_id.id|| "",
     });
 
     const onSubmit = (e) => {
         e.preventDefault();
         router.post(`/task/${task.data.id}`, {
-            _method: "put",
+            _method: "PUT",
             ...data,
         });
     };
@@ -113,6 +116,83 @@ const Edit = ({ auth, task }) => {
                             </div>
                             <div className="mt-4">
                                 <InputLabel
+                                    value={"Priority"}
+                                    htmlFor={"task_priority"}
+                                />
+                                <SelectInput
+                                    id={"task_priority"}
+                                    name={"priority"}
+                                    className={"mt-1 block w-full"}
+                                    onChange={(e) =>
+                                        setData("priority", e.target.value)
+                                    }
+                                >
+                                    <option value="low">low</option>
+                                    <option value="medium">medium</option>
+                                    <option value="high">high</option>
+                                </SelectInput>
+                                <InputError
+                                    htmlFor="task_priority"
+                                    message={errors.priority}
+                                />
+                            </div>
+                            <div className="mt-4">
+                                <InputLabel
+                                    value={"Assigne"}
+                                    htmlFor={"task_assigned_user_id"}
+                                />
+                                <SelectInput
+                                    id={"task_assigned_user_id"}
+                                    name={"assigned_user_id"}
+                                    className={"mt-1 block w-full"}
+                                    value={data.assigned_user_id}
+                                    onChange={(e) =>
+                                        setData("assigned_user_id", e.target.value)
+                                    }
+                                >
+                                    <option value="">__</option>
+                                    {users.map((user) => (
+                                        <option key={user.id} value={user.id}>
+                                            {user.name}
+                                        </option>
+                                    ))}
+                                </SelectInput>
+                                <InputError
+                                    htmlFor="task_assigned_user_id"
+                                    message={errors.assigned_user_id}
+                                />
+                            </div>
+                            <div className="mt-4">
+                                <InputLabel
+                                    value={"Project"}
+                                    htmlFor={"project"}
+                                />
+                                <SelectInput
+                                    id={"project"}
+                                    name={"project"}
+                                    className={"mt-1 block w-full"}
+                                    value={data.project_id}
+                                    onChange={(e) =>
+                                        setData("project_id", e.target.value)
+                                    }
+                                >
+                                    <option value="">__</option>
+                                    {projects.map((project) => (
+                                        <option
+                                            key={project.id}
+                                            value={project.id}
+                                        >
+                                            {project.name}
+                                        </option>
+                                    ))}
+                                </SelectInput>
+                                <InputError
+                                    htmlFor="task_assigned_user_id"
+                                    message={errors.project_id}
+                                />
+                            </div>
+                            <div className="mt-4">
+                                <InputLabel
                                     htmlFor="task_dead_line"
                                     value="Deadline"
                                 />
@@ -141,6 +221,7 @@ const Edit = ({ auth, task }) => {
                                         setData("status", e.target.value)
                                     }
                                     name="status"
+                                    value={data.status}
                                     className="mt-1 block w-full border-none"
                                 >
                                     <option value="">--</option>

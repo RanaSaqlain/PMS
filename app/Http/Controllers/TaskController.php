@@ -35,6 +35,7 @@ class TaskController extends Controller
         return inertia('Task/Index', [
             'tasks' => $taskResource,
             'queryParams' => $request->query() ?: null,
+            'success' => session('success'),
         ]);
     }
 
@@ -99,8 +100,12 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
+        $users = User::all();
+        $projects = Project::all();
         return inertia('Task/Edit', [
-            'task' => new TaskResource($task)
+            'task' => new TaskResource($task),
+            'users' => $users,
+            'projects' => $projects,
         ]);
     }
 
